@@ -3,7 +3,13 @@
 // and what to do when importing types
 declare namespace App {
 	// interface Error {}
-	// interface Locals {}
-	// interface PageData {}
+	// interface Locals {
+	// 	transactions: import('$lib/types/finance').TransactionsType;
+	// 	summary: string;
+	// }
+	interface PageData {
+		transactions: import('$lib/types/finance').TransactionsType;
+		total: import('$lib/types/finance').TotalType;
+	}
 	// interface Platform {}
 }
