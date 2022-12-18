@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const TxType = z.enum(['EXPENSE', 'GAIN']);
-const TxAmt = z.number().int().positive().finite();
+const TxAmt = z.number().positive().finite();
 const TxCurrency = z.string().min(2).max(5);
 const TxDateTime = z.string();
 const TxCategory = z.enum([
@@ -11,7 +11,8 @@ const TxCategory = z.enum([
 	'FOOD',
 	'TRANSPORTATION',
 	'ENTERTAINMENT',
-	'DEBT'
+	'DEBT',
+	'CHARITY'
 ]);
 
 const Transaction = z.object({
@@ -29,7 +30,7 @@ type TransactionType = z.infer<typeof Transaction>;
 type TransactionsType = z.infer<typeof Transactions>;
 
 const Total = z.object({
-	value: z.number().int().positive().finite(),
+	value: z.number().positive().finite(),
 	currency: TxCurrency
 });
 

@@ -9,6 +9,7 @@ declare namespace App {
 	// }
 	interface PageData {
 		transactions: import('$lib/types/finance').TransactionsType;
+		relativePercentageGain: import('$lib/types/statistics').RelativePercentageGain;
 		total: import('$lib/types/finance').TotalType;
 	}
 	// interface Platform {}

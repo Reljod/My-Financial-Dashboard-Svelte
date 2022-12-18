@@ -4,6 +4,11 @@
 	import MdClose from 'svelte-icons/md/MdClose.svelte';
 	import type { z } from 'zod';
 	import type { PageData } from './$types';
+
+	import RecentlyAdded from '$lib/components/RecentlyAdded/index.svelte';
+	import PercentageExpensesChart from '$lib/components/TimeSeriesCharts/ExpensesCharts/PercentageExpensesChart.svelte';
+	// import TimeSeriesCharts from '$lib/components/TimeSeriesCharts/index.svelte';
+
 	export let data: PageData;
 
 	let openAddTransactionForm = false;
@@ -11,7 +16,14 @@
 	const currencyCodes = CurrencyCode.options;
 	const transactionCategories = ZodTypes.TxCategory.options;
 	const txGainCategories = ['SALARY', 'INITIAL'];
-	const txExpensesCategories = ['BILLS', 'FOOD', 'TRANSPORTATION', 'ENTERTAINMENT', 'DEBT'];
+	const txExpensesCategories = [
+		'BILLS',
+		'FOOD',
+		'TRANSPORTATION',
+		'ENTERTAINMENT',
+		'DEBT',
+		'CHARITY'
+	];
 
 	let amount: z.infer<typeof ZodTypes.TxAmt>;
 	let currency: z.infer<typeof ZodTypes.TxCurrency>;
@@ -36,9 +48,9 @@
 	<title>Financial Dashboard</title>
 </svelte:head>
 
-<div class="grid grid-cols-3 gap-3 w-screen h-screen p-2 box-border font-serif">
-	<div class="grid grid-rows-2 gap-3 col-span-2">
-		<div class="grid grid-cols-12 gap-3 row-span-1 ">
+<div class="grid grid-cols-3 gap-3 w-screen max-h-screen p-2 box-border font-serif overflow-auto">
+	<div class="grid grid-rows-5 gap-3 col-span-2">
+		<div class="grid grid-cols-12 gap-3 row-span-2 ">
 			<div class="grid grid-rows-12 gap-3 col-span-5 ">
 				<div class="grid grid-cols-6 gap-3 row-span-5">
 					<div class="col-span-1 flex flex-col">
@@ -73,11 +85,21 @@
 				</div>
 			</div>
 		</div>
-		<div class="row-span-1 bg-card-primary" />
+		<div id="time-series-graph-card" class="grid grid-rows-6 row-span-4 gap-2 bg-card-primary">
+			<div class="grid grid-cols-3 gap-2 row-span-4">
+				<div class="col-span-2 bg-card-primary">
+					<PercentageExpensesChart {data} />
+				</div>
+				<div class="col-span-1 bg-card-primary" />
+			</div>
+			<div class="row-span-2 bg-card-primary" />
+		</div>
 	</div>
-	<div class="grid grid-rows-12 col-span-1 gap-3">
-		<div class="row-span-3 bg-card-primary" />
-		<div class="row-span-9 bg-card-primary" />
+	<div class="grid grid-rows-6 gap-3">
+		<div class="row-span-4 bg-card-primary" />
+		<div class="row-span-2 row-end-auto bg-card-primary">
+			<RecentlyAdded transactions={data.transactions} />
+		</div>
 	</div>
 </div>
 

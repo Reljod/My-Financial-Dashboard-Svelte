@@ -33,7 +33,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"chart.js": "^4.1.1",
 		"daisyui": "^2.45.0",
+		"danfojs-node": "^1.1.2",
 		"svelte-icons": "^2.1.0",
 		"zod": "^3.20.2"
 	}
