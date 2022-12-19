@@ -1,9 +1,14 @@
-type DefaultSingleLineGraphOptions = {
-	title: string;
+type DefaultSingleLineGraphDataOptions = {
 	label: string;
-	chartValues: Array<number>;
-	chartLabels: Array<string>;
+	chartValues: Array<number | string>;
 	color: string;
 };
 
-export type { DefaultSingleLineGraphOptions };
+type DefaultSingleLineGraphOptions = {
+	title: string;
+	chartLabels: Array<string>;
+	data: Array<DefaultSingleLineGraphDataOptions>;
+	height: string | undefined;
+};
+
+export type { DefaultSingleLineGraphOptions, DefaultSingleLineGraphDataOptions };
