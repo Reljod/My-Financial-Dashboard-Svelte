@@ -5,4 +5,14 @@ type IntervalStats = {
 	percentageIncrease: Array<number>;
 };
 
-export type { IntervalStats };
+type AmtCategoriesByType = {
+	amounts: Array<number>;
+	categories: Array<string>;
+};
+
+type AmtCategories = {
+	expenses: AmtCategoriesByType;
+	gains: AmtCategoriesByType;
+};
+
+export type { IntervalStats, AmtCategories, AmtCategoriesByType };

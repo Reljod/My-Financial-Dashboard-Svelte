@@ -2,7 +2,7 @@ import { addNewTransaction, getAllTransactions } from '$lib/server/db';
 import Statistics from '$lib/server/finance/stats';
 import { Summary } from '$lib/server/finance/summary';
 import { ZodTypes } from '$lib/types/finance';
-import type { IntervalStats } from '$lib/types/statistics';
+import type { AmtCategories, IntervalStats } from '$lib/types/statistics';
 import type { Actions, RouteParams } from './$types';
 
 export const load = async ({ params }: { params: RouteParams }) => {
@@ -14,10 +14,18 @@ export const load = async ({ params }: { params: RouteParams }) => {
 	const stats = new Statistics(transactions);
 
 	const intervalStats: IntervalStats = stats.getIntervalStats();
+	const expenses = stats.getAmountCategoriesByType('EXPENSE');
+	const gains = stats.getAmountCategoriesByType('GAIN');
+
+	const amtCategories = {
+		expenses,
+		gains
+	} as AmtCategories;
 
 	const data = {
 		transactions,
 		intervalStats,
+		amtCategories,
 		total: {
 			value: summary.total,
 			currency: 'PHP'

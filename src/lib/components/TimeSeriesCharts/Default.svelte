@@ -5,8 +5,6 @@
 
 	export let params: DefaultSingleLineGraphOptions;
 
-	// params.chartValues = [20, 10, 5, 2, 20, 30, 45];
-	// params.chartLabels = ['12/12', '12/13', '12/14', '12/15', '12/16', '12/17', '12/18'];
 	let ctx: any;
 	let chartCanvas: HTMLCanvasElement;
 

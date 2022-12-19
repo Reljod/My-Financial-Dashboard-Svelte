@@ -28,6 +28,7 @@ const Transactions = z.array(Transaction);
 
 type TransactionType = z.infer<typeof Transaction>;
 type TransactionsType = z.infer<typeof Transactions>;
+type TransactionType_Type = z.infer<typeof TxType>;
 
 const Total = z.object({
 	value: z.number().positive().finite(),
@@ -47,4 +48,4 @@ export const ZodTypes = {
 	Total
 };
 
-export type { TransactionType, TransactionsType, TotalType };
+export type { TransactionType, TransactionsType, TotalType, TransactionType_Type };

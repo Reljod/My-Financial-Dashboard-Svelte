@@ -1,14 +1,30 @@
-type DefaultSingleLineGraphDataOptions = {
+interface DefaultSingleLineGraphDataOptions {
 	label: string;
-	chartValues: Array<number | string>;
 	color: string;
-};
+	chartValues: Array<number | string>;
+}
 
-type DefaultSingleLineGraphOptions = {
+interface DefaultSingleLineGraphOptions {
 	title: string;
 	chartLabels: Array<string>;
-	data: Array<DefaultSingleLineGraphDataOptions>;
 	height: string | undefined;
-};
+	data: Array<DefaultSingleLineGraphDataOptions>;
+}
 
-export type { DefaultSingleLineGraphOptions, DefaultSingleLineGraphDataOptions };
+interface DefaultPieChartOptions {
+	datasets: Array<{ data: Array<number> }>;
+	label: Array<string>;
+}
+
+interface DefaultPieChartDataOptions {
+	title: string;
+	height: string | undefined;
+	data: DefaultPieChartOptions;
+}
+
+export type {
+	DefaultSingleLineGraphOptions,
+	DefaultSingleLineGraphDataOptions,
+	DefaultPieChartOptions,
+	DefaultPieChartDataOptions
+};

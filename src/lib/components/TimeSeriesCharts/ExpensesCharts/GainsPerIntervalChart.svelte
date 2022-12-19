@@ -10,13 +10,13 @@
 
 	const sumData = {
 		chartValues: data.intervalStats.sum,
-		label: 'Gains/Expenses',
+		label: 'Gains/Expenses (PHP)',
 		color: 'rgb(22, 101, 52)'
 	} as DefaultSingleLineGraphDataOptions;
 
 	const accSumData = {
 		chartValues: data.intervalStats.accSum,
-		label: 'Total',
+		label: 'Total (PHP)',
 		color: 'rgb(250, 204, 21)'
 	} as DefaultSingleLineGraphDataOptions;
 

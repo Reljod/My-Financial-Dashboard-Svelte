@@ -1,37 +1,48 @@
-import type { TransactionsType } from '$lib/types/finance';
+import type { TransactionsType, TransactionType_Type } from '$lib/types/finance';
 import { ZodTypes } from '$lib/types/finance';
-import type { IntervalStats } from '$lib/types/statistics';
+import type { AmtCategoriesByType, IntervalStats } from '$lib/types/statistics';
 import dfd from 'danfojs-node';
 
 class Statistics {
 	keys: Array<string>;
+	df: dfd.DataFrame;
 
 	constructor(public transactions: TransactionsType) {
 		this.transactions = transactions;
 		this.keys = ZodTypes.Transaction.keyof().options;
+		this.df = new dfd.DataFrame(this.transactions);
+		this._preprocess();
 	}
 
-	getIntervalStats(): IntervalStats {
-		const df = new dfd.DataFrame(this.transactions);
-		const createdAtDate = df['created_at'].apply((x: string | number | Date) =>
+	_preprocess() {
+		const createdAtDate = this.df['created_at'].apply((x: string | number | Date) =>
 			new Date(x).toDateString()
 		);
-		const signedAmtDf = df.loc({ columns: ['type', 'amt'] }).apply((row: number[]) => {
+		const signedAmtDf = this.df.loc({ columns: ['type', 'amt'] }).apply((row: number[]) => {
 			row[1] = (row[0] as unknown as string) === 'GAIN' ? row[1] : row[1] * -1;
 			return row;
 		});
-		// const signedAmt = df['amt'].apply((x) => (df['type'] === 'GAIN' ? x : x * -1));
-		// df.loc[(df['type'] === 'EXPENSE', 'signed_amt')] = df['amt'] * -1;
 
-		df.addColumn('created_at_date', createdAtDate, { inplace: true });
-		df.addColumn('signed_amt', signedAmtDf['amt'], { inplace: true });
+		this.df.addColumn('created_at_date', createdAtDate, { inplace: true });
+		this.df.addColumn('signed_amt', signedAmtDf['amt'], { inplace: true });
+	}
 
-		const newDf = df.loc({ columns: ['created_at_date', 'signed_amt'] });
+	getAmountCategoriesByType(type: TransactionType_Type): AmtCategoriesByType {
+		let newDf = this.df.loc({ columns: ['type', 'amt', 'category'] });
+		newDf = newDf.groupby(['type', 'category']).sum();
+		const filteredDf = newDf.query(newDf['type'].eq(type));
 
+		const result = {
+			amounts: filteredDf['amt_sum'].values,
+			categories: filteredDf['category'].values
+		} as AmtCategoriesByType;
+
+		return result;
+	}
+
+	getIntervalStats(): IntervalStats {
+		const newDf = this.df.loc({ columns: ['created_at_date', 'signed_amt'] });
 		const groupedDf = newDf.groupby(['created_at_date']).sum();
-
-		groupedDf.print();
-
 		const isoDate = groupedDf['created_at_date'].apply((x: string | number | Date) =>
 			new Date(x).toISOString()
 		);
@@ -39,8 +50,6 @@ class Statistics {
 
 		groupedDf.addColumn('created_at_date_iso', isoDate, { inplace: true });
 		groupedDf.addColumn('signed_amt_sum_cum', cumSum['signed_amt_sum'], { inplace: true });
-
-		groupedDf.print();
 
 		let index = 0;
 		const percentageIncrease = groupedDf.loc({ columns: ['signed_amt_sum_cum'] }).apply((row) => {
@@ -56,8 +65,6 @@ class Statistics {
 		groupedDf.addColumn('percentage_increase', percentageIncrease as number[], {
 			inplace: true
 		});
-
-		groupedDf.print();
 
 		const dataObj: IntervalStats = {
 			sum: groupedDf['signed_amt_sum'].values,

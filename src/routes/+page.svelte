@@ -5,6 +5,8 @@
 	import type { z } from 'zod';
 	import type { PageData } from './$types';
 
+	import ExpensesCategoryChart from '$lib/components/PieCharts/CategoriesByTypeChart/ExpensesCategoryChart.svelte';
+	import GainsCategoryChart from '$lib/components/PieCharts/CategoriesByTypeChart/GainsCategoryChart.svelte';
 	import RecentlyAdded from '$lib/components/RecentlyAdded/index.svelte';
 	import GainsPerIntervalChart from '$lib/components/TimeSeriesCharts/ExpensesCharts/GainsPerIntervalChart.svelte';
 	import PercentageGainPerIntervalChart from '$lib/components/TimeSeriesCharts/ExpensesCharts/PercentageGainPerIntervalChart.svelte';
@@ -53,7 +55,7 @@
 	class="grid grid-cols-3 gap-3 w-screen h-screen max-h-screen p-2 box-border font-serif overflow-auto"
 >
 	<div class="grid grid-rows-5 gap-3 col-span-2">
-		<div class="grid grid-cols-12 gap-3 row-span-2 ">
+		<div class="grid grid-cols-12 gap-3 row-span-1 ">
 			<div class="grid grid-rows-12 gap-3 col-span-5 ">
 				<div class="grid grid-cols-6 gap-3 row-span-5">
 					<div class="col-span-1 flex flex-col">
@@ -67,10 +69,6 @@
 					<div class="col-span-5 bg-card-primary" />
 				</div>
 				<div class="row-span-4 bg-card-primary" />
-				<div class="flex row-span-3 gap-2">
-					<div class="flex-1 bg-card-primary" />
-					<div class="flex-1 bg-card-primary" />
-				</div>
 			</div>
 			<div
 				id="current-net-card"
@@ -88,7 +86,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="time-series-graph-card" class="grid row-span-3 gap-2">
+		<div id="time-series-graph-card" class="grid row-span-4 gap-2">
 			<div class="grid grid-cols-3 gap-2">
 				<div class="grid grid-rows-2 col-span-2 gap-2">
 					<div class="bg-card-primary">
@@ -98,7 +96,14 @@
 						<PercentageGainPerIntervalChart {data} />
 					</div>
 				</div>
-				<div class="col-span-1 bg-card-primary" />
+				<div class="grid col-span-1 gap-2">
+					<div class="bg-card-primary">
+						<ExpensesCategoryChart {data} />
+					</div>
+					<div class="bg-card-primary">
+						<GainsCategoryChart {data} />
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

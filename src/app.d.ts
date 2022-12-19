@@ -11,6 +11,7 @@ declare namespace App {
 		transactions: import('$lib/types/finance').TransactionsType;
 		intervalStats: import('$lib/types/statistics').IntervalStats;
 		total: import('$lib/types/finance').TotalType;
+		amtCategories: import('$lib/types/statistics').AmtCategories;
 	}
 	// interface Platform {}
 }
