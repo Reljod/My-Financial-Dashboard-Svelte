@@ -1,6 +1,6 @@
 import type { TransactionsType } from '$lib/types/finance';
 import { ZodTypes } from '$lib/types/finance';
-import type { RelativePercentageGain } from '$lib/types/statistics';
+import type { IntervalStats } from '$lib/types/statistics';
 import dfd from 'danfojs-node';
 
 class Statistics {
@@ -11,7 +11,7 @@ class Statistics {
 		this.keys = ZodTypes.Transaction.keyof().options;
 	}
 
-	getRelativePercentageGain(): RelativePercentageGain {
+	getIntervalStats(): IntervalStats {
 		const df = new dfd.DataFrame(this.transactions);
 		const createdAtDate = df['created_at'].apply((x: string | number | Date) =>
 			new Date(x).toDateString()
@@ -59,7 +59,7 @@ class Statistics {
 
 		groupedDf.print();
 
-		const dataObj: RelativePercentageGain = {
+		const dataObj: IntervalStats = {
 			sum: groupedDf['signed_amt_sum'].values,
 			date: groupedDf['created_at_date_iso'].values,
 			accSum: groupedDf['signed_amt_sum_cum'].values,

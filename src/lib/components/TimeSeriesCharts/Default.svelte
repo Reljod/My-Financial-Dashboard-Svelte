@@ -14,6 +14,15 @@
 		return !isNaN(new Date(dateStr).getDate());
 	}
 
+	$: datasetsValue = params.data.map((data) => {
+		return {
+			label: data.label,
+			backgroundColor: data.color,
+			borderColor: data.color,
+			data: data.chartValues
+		};
+	});
+
 	$: parseLabels = (labels: string[]) => {
 		return labels.map((label) => {
 			if (!isDate(label)) {
@@ -30,17 +39,18 @@
 			type: 'line',
 			data: {
 				labels: parseLabels(params.chartLabels),
-				datasets: [
-					{
-						label: params.title,
-						backgroundColor: params.color,
-						borderColor: params.color,
-						data: params.chartValues
+				datasets: datasetsValue
+			},
+			options: {
+				plugins: {
+					title: {
+						display: true,
+						text: params.title
 					}
-				]
+				}
 			}
 		});
 	});
 </script>
 
-<canvas bind:this={chartCanvas} height="120px" id="myChart" />
+<canvas bind:this={chartCanvas} height={params.height || '120px'} id="myChart" />
