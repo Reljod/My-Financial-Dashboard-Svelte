@@ -10,6 +10,7 @@ export const load = async ({ params }: { params: RouteParams }) => {
 	const transactionsRaw = transactionsRawDb['documents'];
 
 	const transactions = ZodTypes.Transactions.parse(transactionsRaw);
+	transactions.sort((a, b) => new Date(a.created_at).getDate() - new Date(b.created_at).getDate());
 	const summary = new Summary(transactions);
 	const stats = new Statistics(transactions);
 
