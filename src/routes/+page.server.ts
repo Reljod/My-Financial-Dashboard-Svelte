@@ -10,6 +10,7 @@ export const load = async ({ params }: { params: RouteParams }) => {
 	const transactionsRaw = transactionsRawDb['documents'];
 
 	const transactions = ZodTypes.Transactions.parse(transactionsRaw);
+	transactions.sort((a, b) => new Date(a.created_at).getDate() - new Date(b.created_at).getDate());
 	const summary = new Summary(transactions);
 	const stats = new Statistics(transactions);
 
@@ -38,11 +39,13 @@ export const load = async ({ params }: { params: RouteParams }) => {
 export const actions: Actions = {
 	'add-transaction': async (event) => {
 		const formData = await event.request.formData();
+		const datetimeStr = formData.get('transactionDate') + ' ' + formData.get('transactionTime');
+
 		const newTransaction = ZodTypes.Transaction.parse({
 			type: formData.get('type'),
 			amt: parseFloat(formData.get('amount') as string),
 			currency: formData.get('currency'),
-			created_at: new Date().toISOString(),
+			created_at: new Date(datetimeStr).toISOString(),
 			updated_at: new Date().toISOString(),
 			category: formData.get('category')
 		});
