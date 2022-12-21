@@ -10,6 +10,7 @@
 	import RecentlyAdded from '$lib/components/RecentlyAdded/index.svelte';
 	import GainsPerIntervalChart from '$lib/components/TimeSeriesCharts/ExpensesCharts/GainsPerIntervalChart.svelte';
 	import PercentageGainPerIntervalChart from '$lib/components/TimeSeriesCharts/ExpensesCharts/PercentageGainPerIntervalChart.svelte';
+	import { onMount } from 'svelte';
 	// import TimeSeriesCharts from '$lib/components/TimeSeriesCharts/index.svelte';
 
 	export let data: PageData;
@@ -28,23 +29,50 @@
 		'CHARITY'
 	];
 
-	let amount: z.infer<typeof ZodTypes.TxAmt>;
+	let amount: z.infer<typeof ZodTypes.TxAmt> | undefined;
 	let currency: z.infer<typeof ZodTypes.TxCurrency>;
 	let type: z.infer<typeof ZodTypes.TxType>;
 	let category: z.infer<typeof ZodTypes.TxCategory>;
+	let date: any = getCurrentDate();
+	let time: any = getCurrentTime();
 
 	$: isTotalNegative = data.total.value < 0;
-	$: isEnableSubmit = amount && currency && type && category;
+	$: isEnableSubmit = amount && currency && type && category && date && time;
 	$: isEnableClear = !!amount;
 
-	// $: console.log(amount, currency, type, category);
-	// $: submitAddTransaction = () => {
-	// 	openAddTransactionForm = false;
-	// };
+	$: onClearForm = () => {
+		amount = undefined;
+		date = undefined;
+		time = undefined;
+	};
+
+	$: onSubmit = () => {
+		isEnableSubmit = false;
+		isEnableClear = false;
+	};
 
 	function capitalize(str: string) {
 		return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 	}
+
+	function getCurrentDate() {
+		return new Date().toISOString().substring(0, 10);
+	}
+
+	function getCurrentTime() {
+		return new Date().toTimeString().substring(0, 5);
+	}
+
+	onMount(() => {
+		const interval = setInterval(() => {
+			date = getCurrentDate();
+			time = getCurrentTime();
+		}, 1000);
+
+		return () => {
+			clearInterval(interval);
+		};
+	});
 </script>
 
 <svelte:head>
@@ -122,14 +150,14 @@
 		aria-hidden="true"
 		class="fixed top-0 left-0 right-0 z-40 w-screen h-screen bg-black bg-opacity-30 flex justify-center items-center"
 	>
-		<div class="relative w-[500px] h-[400px] bg-white rounded-lg z-50 px-4 pt-12">
+		<div class="relative w-[500px] bg-white rounded-lg z-50 px-6 pt-12 pb-8">
 			<button
 				class="absolute top-2 right-2 w-8 h-8"
 				on:click={() => (openAddTransactionForm = false)}><MdClose /></button
 			>
 			<h1 class="text-3xl font-bold">Add New transaction</h1>
-			<form method="POST" action="?/add-transaction">
-				<div class="form-control w-full py-4">
+			<form method="POST" action="?/add-transaction" on:submit={onSubmit}>
+				<div class="form-control w-full py-6">
 					<div class="flex w-full">
 						<div class="flex-grow">
 							<label for="transaction-amount" class="label">
@@ -177,7 +205,7 @@
 								{/each}
 							</select>
 						</div>
-						<div class="ml-2">
+						<div class="ml-2 mr-2">
 							<label for="transaction-category" class="label">
 								<span class="label-text">Category</span>
 							</label>
@@ -199,10 +227,47 @@
 							</select>
 						</div>
 					</div>
+					<div class="flex">
+						<div class="flex-grow mr-2">
+							<label for="transaction-date" class="label">
+								<span class="label-text">Transaction Date</span>
+							</label>
+							<input
+								name="transactionDate"
+								id="transaction-date"
+								type="date"
+								class="input input-bordered w-full max-w-xs"
+								bind:value={date}
+							/>
+						</div>
+						<div class="flex-grow ml-2">
+							<label for="transaction-time" class="label">
+								<span class="label-text">Transaction Time</span>
+							</label>
+							<input
+								name="transactionTime"
+								id="transaction-time"
+								type="time"
+								class="input input-bordered w-full max-w-xs"
+								default={true}
+								bind:value={time}
+							/>
+						</div>
+					</div>
 				</div>
 				<div class="flex w-full gap-2 mt-4">
-					<button class="btn flex-1" disabled={!isEnableSubmit} type="submit">Submit</button>
-					<button class="btn flex-1" disabled={!isEnableClear} type="button">Clear</button>
+					<button
+						class="btn btn-primary flex-1"
+						disabled={!isEnableSubmit}
+						on:submit={() => (isEnableSubmit = false)}
+						type="submit">Submit</button
+					>
+					<button
+						class="btn btn-outline btn-secondary flex-1"
+						disabled={!isEnableClear}
+						on:click={onClearForm}
+						type="button">Clear</button
+					>
 				</div>
 			</form>
 		</div>
