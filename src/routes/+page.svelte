@@ -10,7 +10,6 @@
 	import RecentlyAdded from '$lib/components/RecentlyAdded/index.svelte';
 	import GainsPerIntervalChart from '$lib/components/TimeSeriesCharts/ExpensesCharts/GainsPerIntervalChart.svelte';
 	import PercentageGainPerIntervalChart from '$lib/components/TimeSeriesCharts/ExpensesCharts/PercentageGainPerIntervalChart.svelte';
-	import { onMount } from 'svelte';
 	// import TimeSeriesCharts from '$lib/components/TimeSeriesCharts/index.svelte';
 
 	export let data: PageData;
@@ -40,20 +39,20 @@
 	$: isEnableSubmit = amount && currency && type && category && date && time;
 	$: isEnableClear = !!amount;
 
-	$: onClearForm = () => {
+	const onClearForm = () => {
 		amount = undefined;
 		date = undefined;
 		time = undefined;
 	};
 
-	$: onSubmit = () => {
+	const onSubmit = () => {
 		isEnableSubmit = false;
 		isEnableClear = false;
 	};
 
-	function capitalize(str: string) {
+	const capitalize = (str: string) => {
 		return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-	}
+	};
 
 	function getCurrentDate() {
 		return new Date().toISOString().substring(0, 10);
@@ -63,16 +62,11 @@
 		return new Date().toTimeString().substring(0, 5);
 	}
 
-	onMount(() => {
-		const interval = setInterval(() => {
-			date = getCurrentDate();
-			time = getCurrentTime();
-		}, 1000);
-
-		return () => {
-			clearInterval(interval);
-		};
-	});
+	const onOpenForm = () => {
+		openAddTransactionForm = true;
+		date = getCurrentDate();
+		time = getCurrentTime();
+	};
 </script>
 
 <svelte:head>
@@ -91,7 +85,7 @@
 							class="flex bg-card-primary aspect-square rounded-lg text-5xl text-center justify-center hover:bg-card-primary-hover"
 							type="button"
 							data-modal-toggle="add-transaction-form-modal"
-							on:click={() => (openAddTransactionForm = true)}>+</button
+							on:click={onOpenForm}>+</button
 						>
 					</div>
 					<div class="col-span-5 bg-card-primary" />
