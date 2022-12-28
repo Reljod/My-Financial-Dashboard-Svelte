@@ -3,11 +3,12 @@
 // and what to do when importing types
 declare namespace App {
 	// interface Error {}
-	// interface Locals {
-	// 	transactions: import('$lib/types/finance').TransactionsType;
-	// 	summary: string;
-	// }
+	interface Locals {
+		sessionId: string;
+		user: import('$lib/types/auth/user').UserHashedType | null;
+	}
 	interface PageData {
+		user: import('$lib/types/auth/user').UserHashedType | null;
 		transactions: import('$lib/types/finance').TransactionsType;
 		intervalStats: import('$lib/types/statistics').IntervalStats;
 		total: import('$lib/types/finance').TotalType;
