@@ -1,8 +1,9 @@
+import redis from '$lib/redis';
 import { sessionConfig } from '$lib/server/config/session';
 import type { SessionHandler, TransactionDb } from '$lib/server/db';
 import { TransactionMongoDb } from '$lib/server/db/mongodb';
 import Authentication, { BCryptPasswordHasher } from '$lib/server/db/mongodb/auth';
-import { MongoSessionHandler } from '$lib/server/db/mongodb/session';
+import { RedisSessionHandler } from '$lib/server/db/redis/session';
 import Statistics from '$lib/server/finance/stats';
 import { Summary } from '$lib/server/finance/summary';
 import type { LoginInput } from '$lib/types/auth/user';
@@ -16,7 +17,7 @@ import type { Actions } from './$types';
 const passwordHasher = new BCryptPasswordHasher();
 const authentication = new Authentication(passwordHasher);
 const transactionDb: TransactionDb = new TransactionMongoDb();
-const sessionHandler: SessionHandler = new MongoSessionHandler();
+const sessionHandler: SessionHandler = new RedisSessionHandler(redis);
 
 export const load = async (event: any) => {
 	const transactionsRawDb = await transactionDb.getAllTransactions({} as any);

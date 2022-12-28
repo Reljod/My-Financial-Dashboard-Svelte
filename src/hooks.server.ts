@@ -1,9 +1,10 @@
+import redis from '$lib/redis';
 import type { SessionHandler } from '$lib/server/db';
 import Authentication, { BCryptPasswordHasher } from '$lib/server/db/mongodb/auth';
-import { MongoSessionHandler } from '$lib/server/db/mongodb/session';
+import { RedisSessionHandler } from '$lib/server/db/redis/session';
 
 const passwordHasher = new BCryptPasswordHasher();
-const sessionHandler: SessionHandler = new MongoSessionHandler();
+const sessionHandler: SessionHandler = new RedisSessionHandler(redis);
 const authentication = new Authentication(passwordHasher);
 
 export const handle = async ({ event, resolve }) => {

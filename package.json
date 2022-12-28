@@ -38,6 +38,7 @@
 		"cuid": "^2.1.8",
 		"daisyui": "^2.45.0",
 		"danfojs-node": "^1.1.2",
+		"ioredis": "^5.2.4",
 		"svelte-icons": "^2.1.0",
 		"zod": "^3.20.2"
 	}
