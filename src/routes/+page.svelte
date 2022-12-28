@@ -35,6 +35,9 @@
 	let date: any = getCurrentDate();
 	let time: any = getCurrentTime();
 
+	let loginEmail: string | undefined;
+	let loginPassword: string | undefined;
+
 	$: isTotalNegative = data.total.value < 0;
 	$: isEnableSubmit = amount && currency && type && category && date && time;
 	$: isEnableClear = !!amount;
@@ -243,7 +246,6 @@
 								id="transaction-time"
 								type="time"
 								class="input input-bordered w-full max-w-xs"
-								default={true}
 								bind:value={time}
 							/>
 						</div>
@@ -262,6 +264,51 @@
 						on:click={onClearForm}
 						type="button">Clear</button
 					>
+				</div>
+			</form>
+		</div>
+	</div>
+{/if}
+{#if data.user === null}
+	<div
+		id="login-modal-form"
+		class="fixed top-0 left-0 right-0 z-40 w-screen h-screen bg-black bg-opacity-30 flex justify-center items-center"
+	>
+		<div class="relative w-[400px] bg-white rounded-lg z-50 px-6 pt-12 pb-8">
+			<h1 class="text-3xl font-bold">Login</h1>
+			<form method="POST" action="?/login" on:submit={() => {}}>
+				<div class="form-control w-full py-6">
+					<div class="flex-grow">
+						<label for="login-email" class="label">
+							<span class="label-text">Email</span>
+						</label>
+						<input
+							name="email"
+							id="login-email"
+							type="text"
+							class="input input-bordered w-full"
+							bind:value={loginEmail}
+						/>
+					</div>
+					<div class="flex-grow">
+						<label for="login-password" class="label">
+							<span class="label-text">Password</span>
+						</label>
+						<input
+							name="password"
+							id="login-password"
+							type="password"
+							class="input input-bordered w-full"
+							bind:value={loginPassword}
+						/>
+					</div>
+				</div>
+				<div id="no-account-yet" class="text-center text-sm">
+					<span>Don't have an account yet?</span>
+					<a href="/register" class="text-blue-500">Register</a>
+				</div>
+				<div class="flex w-full gap-2 mt-4">
+					<button class="btn btn-primary flex-1" type="submit">Login</button>
 				</div>
 			</form>
 		</div>

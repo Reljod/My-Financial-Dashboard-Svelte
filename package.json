@@ -33,7 +33,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"bcrypt": "^5.1.0",
 		"chart.js": "^4.1.1",
+		"cuid": "^2.1.8",
 		"daisyui": "^2.45.0",
 		"danfojs-node": "^1.1.2",
 		"svelte-icons": "^2.1.0",
