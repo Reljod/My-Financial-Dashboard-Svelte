@@ -18,21 +18,17 @@ export const handle = async ({ event, resolve }) => {
 		resetAndRedirect();
 	}
 
-	console.log('sessionId', sessionId);
-
 	event.locals.sessionId = sessionId;
 
 	const session = await sessionHandler.getSession(sessionId);
 	console.log('session', session);
 
 	const isExpired = new Date(session?.expires as string) < new Date();
-	console.log('isexpired', isExpired);
 	if (session && !isExpired) {
 		const userId = session.userId;
 		const response = await authentication.getUserById(userId);
 
 		if (!response.error) {
-			console.log('user session', response.user);
 			event.locals.user = response.user;
 		} else {
 			resetAndRedirect();

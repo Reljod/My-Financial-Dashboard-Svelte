@@ -28,7 +28,8 @@ export class TransactionMongoDb implements TransactionDb {
 
 		try {
 			const response = await fetch(`${MONGODB_API_URI}/action/find`, requestOptions);
-			return response.json();
+			const transactions = (await response.json())['documents'];
+			return transactions;
 		} catch (error) {
 			console.log(error);
 		}

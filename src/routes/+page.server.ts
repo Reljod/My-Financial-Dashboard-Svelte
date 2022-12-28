@@ -20,8 +20,7 @@ const transactionDb: TransactionDb = new TransactionMongoDb();
 const sessionHandler: SessionHandler = new RedisSessionHandler(redis);
 
 export const load = async (event: any) => {
-	const transactionsRawDb = await transactionDb.getAllTransactions({} as any);
-	const transactionsRaw = transactionsRawDb['documents'];
+	const transactionsRaw = await transactionDb.getAllTransactions({} as any);
 
 	const transactions = ZodTypes.Transactions.parse(transactionsRaw);
 	transactions.sort((a, b) => new Date(a.created_at).getDate() - new Date(b.created_at).getDate());
