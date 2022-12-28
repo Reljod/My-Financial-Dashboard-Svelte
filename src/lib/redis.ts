@@ -1,4 +1,6 @@
-import { REDIS_CONNECTION } from '$env/static/private';
+import { REDIS_URL } from '$env/static/private';
 import Redis from 'ioredis';
 
-export default REDIS_CONNECTION ? new Redis(REDIS_CONNECTION) : new Redis();
+const redis = REDIS_URL ? new Redis(REDIS_URL) : new Redis();
+
+export default redis;
