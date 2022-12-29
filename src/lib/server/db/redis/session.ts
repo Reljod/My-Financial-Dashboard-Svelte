@@ -1,3 +1,4 @@
+import { sessionConfig } from '$lib/server/config/session';
 import type { Session } from '$lib/types/auth/session';
 import type { Redis } from 'ioredis';
 import type { z } from 'zod';
@@ -12,7 +13,12 @@ export class RedisSessionHandler implements SessionHandler {
 
 	createNewSession = async (session: z.infer<typeof Session>) => {
 		const { sessionToken, ...rest } = session;
-		const result = await this.redis.set(sessionToken, JSON.stringify(rest));
+		const result = await this.redis.set(
+			sessionToken,
+			JSON.stringify(rest),
+			'EX',
+			sessionConfig.default.maxAge
+		);
 		return result;
 	};
 
